@@ -1,15 +1,9 @@
-
-# fenrir-security
-# fenrir-security
-# vscode-app
 # fenrir-security
 # Customized VS Code with Built-In Wingman AI
 
 This repository includes a customized build of Visual Studio Code with Wingman AI integrated directly as a native component. It launches automatically on first run, is not listed among user-installable extensions, and cannot be removed via the standard Extensions panel.
 
 ---
-
-
 
  Wingman AI is embedded within the application and starts without user intervention.
  It is hidden from the Marketplace and the Extensions sidebar.
@@ -26,8 +20,8 @@ Upgrade process is documented for future maintenance.
 Ensure the following tools are installed:
 
 - Node.js v16
-- Yarn (`npm install -g yarn`)
-- Gulp CLI (`npm install -g gulp`)
+- Yarn (npm install -g yarn)
+- Gulp CLI (npm install -g gulp)
 - Python 3
 - Git, CMake, and Ninja (via Homebrew)
 
@@ -52,7 +46,7 @@ for building the app in mac use the command
 NODE_OPTIONS="--max-old-space-size=8192" npx gulp vscode-darwin-arm64  (if u have 8gb ram laptop) if 16gb then use "npx gulp vscode-darwin-arm64"
 
 
-```
+
 Developed by: Rajesh Chauhan
 GitHub: rajeshchauhan1426
 Submission for: Fenrir Security – Technical Assessment
@@ -61,6 +55,6 @@ yaml
 Copy
 Edit
 
-```
+
 ASK FOR PERMISSION FOR THE USE OF THE SOURCE CODE # fenrir-security
 # vscode-app
