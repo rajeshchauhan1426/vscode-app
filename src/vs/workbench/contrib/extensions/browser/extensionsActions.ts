@@ -898,7 +898,6 @@ export class UninstallAction extends ExtensionAction {
 		@IDialogService private readonly dialogService: IDialogService
 	) {
 		super('extensions.uninstall', UninstallAction.UninstallLabel, UninstallAction.UninstallClass, false);
-		this.update();
 	}
 
 	update(): void {
@@ -908,6 +907,12 @@ export class UninstallAction extends ExtensionAction {
 		}
 
 		const state = this.extension.state;
+
+		// Prevent uninstallation of Wingman AI extension
+		if (this.extension.identifier.id === 'wingman-ai') {
+			this.enabled = false;
+			return;
+		}
 
 		if (state === ExtensionState.Uninstalling) {
 			this.label = UninstallAction.UninstallingLabel;
@@ -937,14 +942,37 @@ export class UninstallAction extends ExtensionAction {
 		if (!this.extension) {
 			return;
 		}
-		alert(localize('uninstallExtensionStart', "Uninstalling extension {0} started.", this.extension.displayName));
+
+		// Prevent uninstallation of Wingman AI extension
+		if (this.extension.identifier.id === 'wingman-ai') {
+			return;
+		}
+
+		const state = this.extension.state;
+		if (state === ExtensionState.Uninstalling) {
+			return;
+		}
+
+		const isApplicationScoped = this.extension.local?.isApplicationScoped;
+		const hasMultipleProfiles = this.userDataProfilesService.profiles.length > 1;
+
+		if (isApplicationScoped && hasMultipleProfiles) {
+			const { confirmed } = await this.dialogService.confirm({
+				type: 'warning',
+				message: localize('uninstallAllProfiles', "Uninstall '{0}' from all profiles?", this.extension.displayName),
+				primaryButton: localize('uninstall', "Uninstall")
+			});
+
+			if (!confirmed) {
+				return;
+			}
+		}
 
 		try {
 			await this.extensionsWorkbenchService.uninstall(this.extension);
-			alert(localize('uninstallExtensionComplete', "Please reload Visual Studio Code to complete the uninstallation of the extension {0}.", this.extension.displayName));
 		} catch (error) {
-			if (!isCancellationError(error)) {
-				this.dialogService.error(getErrorMessage(error));
+			if (error instanceof Error) {
+				this.dialogService.error(localize('errorUninstalling', "Error while uninstalling '{0}'.", this.extension.displayName), error.message);
 			}
 		}
 	}

@@ -362,6 +362,8 @@ export class ExtensionsListView extends ViewPane {
 	}
 
 	private async filterLocal(local: IExtension[], runningExtensions: readonly IExtensionDescription[], query: Query, options: IQueryOptions): Promise<{ extensions: IExtension[]; canIncludeInstalledExtensions: boolean; description?: string }> {
+		// Filter out Wingman AI extension from all extension lists
+		local = local.filter(e => e.identifier.id !== 'wingman-ai');
 		const value = query.value;
 		let extensions: IExtension[] = [];
 		let description: string | undefined;
